@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#183c32">
+  <title>Lunch Box — Good food. Less stress.</title>
+  <style>
+    :root {
+      --forest: #183c32;
+      --forest-2: #244e40;
+      --sage: #dce5d8;
+      --gold: #b68b53;
+      --gold-light: #eee2cd;
+      --ivory: #f7f5ef;
+      --paper: #fffefa;
+      --ink: #26352e;
+      --muted: #788078;
+      --line: #e7e4da;
+      --soft: #f0efe8;
+      --shadow: 0 18px 48px rgba(34, 49, 39, .08);
+      --serif: Georgia, "Times New Roman", serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--ivory);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    button, input, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { color: inherit; }
+    a { color: inherit; }
+    .wrap { width: min(1190px, calc(100% - 44px)); margin: 0 auto; }
+
+    .announcement {
+      padding: 8px 16px;
+      text-align: center;
+      color: #f6f1e7;
+      background: var(--forest);
+      font-size: 11px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+    header {
+      height: 76px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(247,245,239,.94);
+      border-bottom: 1px solid rgba(231,228,218,.8);
+      backdrop-filter: blur(14px);
+    }
+    .nav { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 25px; }
+    .brand { display: flex; gap: 11px; align-items: center; text-decoration: none; }
+    .brand-mark {
+      display: grid; place-items: center; width: 39px; height: 39px;
+      border: 1px solid var(--gold); border-radius: 50%; color: var(--gold);
+      font-family: var(--serif); font-size: 19px;
+    }
+    .brand-text { font-family: var(--serif); font-size: 23px; letter-spacing: -.7px; }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-links a { text-decoration: none; font-size: 12px; color: #58635a; }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta, .button-primary {
+      border: 0; border-radius: 3px; background: var(--forest); color: white;
+      padding: 12px 18px; font-size: 11px; letter-spacing: .8px;
+      text-transform: uppercase; cursor: pointer; transition: .2s ease;
+    }
+    .nav-cta:hover, .button-primary:hover { background: var(--forest-2); transform: translateY(-1px); }
+
+    .hero {
+      min-height: 490px; display: grid; grid-template-columns: 1.02fr .98fr;
+      gap: 55px; align-items: center; padding: 62px 0 68px;
+    }
+    .eyebrow {
+      color: var(--gold); font-size: 10px; font-weight: 750;
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+    h1 {
+      max-width: 600px; margin: 18px 0 22px;
+      font-family: var(--serif); font-size: clamp(48px, 6vw, 75px);
+      line-height: .99; font-weight: 400; letter-spacing: -2.7px;
+    }
+    h1 em { color: var(--forest-2); font-weight: 400; }
+    .hero-copy { max-width: 475px; color: var(--muted); line-height: 1.8; font-size: 15px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 27px; }
+    .button-outline {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 12px 18px; border: 1px solid #c9c8bc; border-radius: 3px;
+      background: transparent; text-decoration: none; font-size: 11px;
+      letter-spacing: .7px; text-transform: uppercase; cursor: pointer;
+    }
+    .button-outline:hover { border-color: var(--gold); color: var(--forest); }
+    .hero-visual {
+      min-height: 355px; position: relative; overflow: hidden;
+      background: #e8e5d9; display: grid; place-items: center;
+    }
+    .hero-visual::before {
+      content: ""; position: absolute; width: 350px; height: 350px;
+      border: 1px solid rgba(182,139,83,.38); border-radius: 50%;
+    }
+    .hero-visual::after {
+      content: ""; position: absolute; width: 280px; height: 280px;
+      border: 1px solid rgba(182,139,83,.28); border-radius: 50%;
+    }
+    .hero-food { position: relative; z-index: 1; font-size: clamp(130px, 18vw, 205px); filter: drop-shadow(0 20px 15px rgba(34,49,39,.14)); }
+    .visual-label {
+      position: absolute; z-index: 2; background: var(--paper); padding: 12px 15px;
+      font-family: var(--serif); font-size: 14px; box-shadow: var(--shadow);
+    }
+    .visual-label.top { left: 18px; top: 20px; }
+    .visual-label.bottom { right: 18px; bottom: 20px; }
+
+    .promise-row {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+      padding: 20px 0; margin-bottom: 62px;
+    }
+    .promise { padding: 0 23px; border-right: 1px solid var(--line); }
+    .promise:first-child { padding-left: 0; }
+    .promise:last-child { border: 0; }
+    .promise strong { display: block; font-family: var(--serif); font-size: 16px; font-weight: 400; }
+    .promise span { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; }
+
+    .section { scroll-margin-top: 100px; padding: 0 0 70px; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 22px; margin-bottom: 24px; }
+    h2 { margin: 8px 0 0; font-family: var(--serif); font-size: clamp(32px, 4vw, 45px); font-weight: 400; letter-spacing: -1.3px; }
+    .section-sub { max-width: 510px; color: var(--muted); font-size: 13px; line-height: 1.7; margin: 8px 0 0; }
+
+    .workspace { display: grid; grid-template-columns: minmax(0, 1fr) 315px; gap: 24px; align-items: start; }
+    .toolbar {
+      display: grid; grid-template-columns: minmax(190px, 1fr) 145px 145px;
+      gap: 9px; padding: 12px; margin-bottom: 14px;
+      background: var(--paper); border: 1px solid var(--line);
+    }
+    .search { position: relative; }
+    .search span { position: absolute; left: 12px; top: 10px; color: var(--gold); font-size: 17px; }
+    .search input, .toolbar select {
+      height: 40px; width: 100%; padding: 0 11px; border: 1px solid var(--line);
+      border-radius: 2px; background: white; outline: none; color: var(--ink); font-size: 12px;
+    }
+    .search input { padding-left: 36px; }
+    .search input:focus, .toolbar select:focus { border-color: var(--gold); }
+    .filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .filter-chip {
+      display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px;
+      border: 1px solid var(--line); background: transparent; font-size: 11px;
+      color: #59645b; cursor: pointer;
+    }
+    .filter-chip input { accent-color: var(--forest); margin: 0; }
+    .filter-chip:has(input:checked) { border-color: var(--gold); background: #f4efe5; color: var(--forest); }
+    .collection-tabs { display: flex; gap: 18px; border-bottom: 1px solid var(--line); margin-bottom: 17px; }
+    .collection-tab {
+      padding: 0 0 10px; border: 0; background: none; color: var(--muted);
+      font-size: 11px; cursor: pointer; border-bottom: 2px solid transparent;
+    }
+    .collection-tab.active { color: var(--forest); border-color: var(--gold); }
+
+    .recipe-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 15px; }
+    .recipe-card { background: var(--paper); border: 1px solid var(--line); }
+    .recipe-image {
+      height: 145px; position: relative; display: grid; place-items: center;
+      background: #e9e9dc; font-size: 67px;
+    }
+    .recipe-card:nth-child(3n+2) .recipe-image { background: #efe5d7; }
+    .recipe-card:nth-child(3n) .recipe-image { background: #dfe9e1; }
+    .recipe-tag {
+      position: absolute; top: 11px; left: 11px; padding: 6px 9px;
+      background: rgba(255,254,250,.94); color: var(--forest);
+      font-size: 9px; letter-spacing: .8px; text-transform: uppercase;
+    }
+    .save-button {
+      position: absolute; top: 8px; right: 9px; width: 31px; height: 31px;
+      border: 0; border-radius: 50%; background: rgba(255,254,250,.93);
+      color: #667068; cursor: pointer; font-size: 17px;
+    }
+    .save-button.saved { color: #a55048; }
+    .recipe-body { padding: 15px; }
+    .recipe-title-line { display: flex; justify-content: space-between; align-items: start; gap: 8px; }
+    .recipe-title-line h3 { margin: 0; font-family: var(--serif); font-size: 19px; font-weight: 400; }
+    .price { color: var(--forest); text-align: right; white-space: nowrap; font-size: 12px; font-weight: 750; }
+    .price small { color: var(--muted); display: block; font-size: 9px; font-weight: 400; }
+    .description { min-height: 36px; margin: 8px 0 12px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+    .meta { display: flex; flex-wrap: wrap; gap: 6px; }
+    .meta span { padding: 5px 7px; background: var(--soft); color: #58645a; font-size: 9px; }
+    .nutrition { display: flex; justify-content: space-between; gap: 7px; padding: 12px 0; margin-top: 10px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .nutrition span { color: var(--muted); font-size: 9px; }
+    .nutrition b { display: block; margin-bottom: 3px; color: var(--ink); font-size: 12px; font-weight: 650; }
+    .card-actions { display: flex; gap: 7px; margin-top: 12px; }
+    .card-actions button { padding: 9px; border: 1px solid var(--line); background: transparent; font-size: 9px; letter-spacing: .5px; text-transform: uppercase; cursor: pointer; }
+    .card-actions button:hover { border-color: var(--gold); }
+    .card-actions .plan-button { flex: 1; background: var(--forest); border-color: var(--forest); color: white; }
+    .card-actions .plan-button.in-plan { background: var(--gold-light); border-color: var(--gold-light); color: var(--forest); }
+    .instructions { display: none; margin-top: 12px; padding: 12px; background: #f4f3ec; color: #59645b; font-size: 11px; line-height: 1.7; }
+    .instructions.open { display: block; }
+    .empty { grid-column: 1/-1; padding: 30px; border: 1px dashed #c9c9bc; text-align: center; color: var(--muted); font-size: 13px; }
+
+    .side-stack { display: grid; gap: 15px; position: sticky; top: 95px; }
+    .panel { padding: 18px; border: 1px solid var(--line); background: var(--paper); }
+    .panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .panel h3 { margin: 0; font-family: var(--serif); font-size: 21px; font-weight: 400; }
+    .badge { padding: 5px 8px; background: var(--gold-light); color: var(--forest); font-size: 9px; }
+    .panel-note { margin: 8px 0 13px; color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .plan-items, .grocery-items { list-style: none; margin: 0; padding: 0; }
+    .plan-items li, .grocery-items li { display: flex; align-items: center; gap: 8px; padding: 9px 0; border-top: 1px solid #eeece4; font-size: 11px; }
+    .plan-items li span:first-child, .grocery-items li span.item-name { flex: 1; }
+    .small-remove { border: 0; background: none; color: #92988f; font-size: 17px; cursor: pointer; }
+    .small-remove:hover { color: #a55048; }
+    .plan-total { display: flex; justify-content: space-between; margin-top: 10px; padding-top: 11px; border-top: 1px solid var(--line); font-size: 11px; }
+    .plan-total strong { color: var(--forest); }
+    .tiny-empty { padding: 12px 0; color: #92988f; font-size: 11px; }
+    .grocery-items { max-height: 220px; overflow: auto; }
+    .grocery-items li { align-items: flex-start; }
+    .grocery-items input { margin: 1px 0 0; accent-color: var(--forest); }
+    .grocery-items .checked .item-name { color: #9da39a; text-decoration: line-through; }
+    .category-label {
+      display: block; padding: 10px 0 4px; color: var(--gold);
+      font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase;
+    }
+    .panel-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 12px; }
+    .panel-actions button { min-height: 34px; padding: 8px 5px; border: 1px solid var(--line); background: transparent; font-size: 9px; text-transform: uppercase; letter-spacing: .4px; cursor: pointer; }
+    .panel-actions button:first-child { border-color: var(--forest); background: var(--forest); color: white; }
+    .panel-actions button:hover { border-color: var(--gold); }
+
+    .campus-section { padding-bottom: 70px; }
+    .campus {
+      display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 25px;
+      padding: 32px; background: var(--forest); color: white;
+    }
+    .campus .eyebrow { color: #d9bd91; }
+    .campus h2 { margin-top: 9px; font-size: 32px; }
+    .campus p { max-width: 590px; margin-bottom: 0; color: #d6dfd8; font-size: 12px; line-height: 1.7; }
+    .campus button { padding: 12px 16px; border: 1px solid #d5bb94; background: transparent; color: white; font-size: 10px; letter-spacing: .7px; text-transform: uppercase; cursor: pointer; }
+    .campus button:hover { background: #ffffff12; }
+    .campus-small { display: block; margin-top: 9px; color: #bdc9bf; font-size: 9px; }
+    footer { padding: 22px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
+
+    @media (max-width: 930px) {
+      .workspace { grid-template-columns: 1fr; }
+      .side-stack { position: static; grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 650px) {
+      .wrap { width: calc(100% - 28px); }
+      .announcement { font-size: 9px; }
+      header { height: 64px; }
+      .nav-links { gap: 12px; }
+      .nav-links a { font-size: 10px; }
+      .nav-links a:nth-child(2) { display: none; }
+      .nav-cta { padding: 10px 11px; font-size: 9px; }
+      .brand-text { font-size: 20px; }
+      .hero { grid-template-columns: 1fr; gap: 27px; padding: 43px 0; }
+      h1 { font-size: 58px; }
+      .hero-visual { min-height: 250px; }
+      .hero-food { font-size: 140px; }
+      .promise-row { margin-bottom: 45px; }
+      .promise { padding: 0 11px; }
+      .promise strong { font-size: 13px; }
+      .promise span { font-size: 9px; line-height: 1.4; }
+      .section-head { align-items: start; flex-direction: column; }
+      .toolbar { grid-template-columns: 1fr 1fr; }
+      .toolbar .search { grid-column: 1/-1; }
+      .recipe-grid { grid-template-columns: 1fr; }
+      .side-stack { grid-template-columns: 1fr; }
+      .campus { grid-template-columns: 1fr; padding: 24px; }
+      .campus h2 { font-size: 28px; }
+    }
+    @media print {
+      body * { visibility: hidden !important; }
+      #groceryPanel, #groceryPanel * { visibility: visible !important; }
+      #groceryPanel { position: absolute; left: 0; top: 0; width: 100%; border: 0; }
+      #groceryPanel .panel-actions, #groceryPanel .panel-note, #groceryPanel .small-remove { display: none !important; }
+      #groceryPanel .grocery-items { max-height: none; overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+  <div class="announcement">Thoughtful meals for busy student days</div>
+
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#" aria-label="Lunch Box home">
+        <span class="brand-mark">L</span>
+        <span class="brand-text">lunch box</span>
+      </a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#recipes">Recipes</a>
+        <a href="#planner">Meal planner</a>
+        <a href="#campus">Campus dining</a>
+        <button class="nav-cta" onclick="document.querySelector('#recipes').scrollIntoView({behavior:'smooth'})">Find your meal</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="wrap hero">
+      <div>
+        <div class="eyebrow">A little more intention, every day</div>
+        <h1>Good food.<br><em>Less stress.</em></h1>
+        <p class="hero-copy">
+          Healthy, affordable meals for the wonderfully busy college life.
+          Find a recipe that fits your time, plan a few meals, and let Lunch Box
+          take care of the grocery list.
+        </p>
+        <div class="hero-actions">
+          <a class="button-primary" href="#recipes">Explore the recipes</a>
+          <a class="button-outline" href="#planner">Plan your week</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-label="A thoughtfully prepared meal">
+        <span class="visual-label top">Made for your kind of busy</span>
+        <span class="hero-food" aria-hidden="true">🥗</span>
+        <span class="visual-label bottom">Simple ingredients. Feel-good meals.</span>
+      </div>
+    </section>
+
+    <section class="wrap promise-row" aria-label="Lunch Box benefits">
+      <div class="promise"><strong>Fits your schedule</strong><span>Find a meal by the time you have.</span></div>
+      <div class="promise"><strong>Kind to your budget</strong><span>See the estimated cost per serving.</span></div>
+      <div class="promise"><strong>Made for your goals</strong><span>Explore nutrition and dietary filters.</span></div>
+    </section>
+
+    <section class="wrap section" id="recipes">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">The recipe collection</div>
+          <h2>Find something good.</h2>
+          <p class="section-sub">Search by recipe or ingredient. Filter by cook time, cost, or nutrition—and save the ones you want to make again.</p>
+        </div>
+      </div>
+
+      <div class="workspace">
+        <div>
+          <div class="toolbar">
+            <label class="search">
+              <span aria-hidden="true">⌕</span>
+              <input id="search" type="search" placeholder="Search recipes or ingredients…" aria-label="Search recipes or ingredients">
+            </label>
+            <select id="timeFilter" aria-label="Maximum cooking time">
+              <option value="all">Any cook time</option>
+              <option value="10">10 minutes</option>
+              <option value="15">15 minutes</option>
+              <option value="20">20 minutes</option>
+              <option value="30">30 minutes</option>
+            </select>
+            <select id="costFilter" aria-label="Maximum cost per serving">
+              <option value="all">Any budget</option>
+              <option value="3">$3 or less</option>
+              <option value="4">$4 or less</option>
+              <option value="5">$5 or less</option>
+            </select>
+          </div>
+
+          <div class="filter-row">
+            <label class="filter-chip"><input id="vegetarianFilter" type="checkbox"> Vegetarian</label>
+            <label class="filter-chip"><input id="proteinFilter" type="checkbox"> High protein · 25g+</label>
+            <label class="filter-chip"><input id="sodiumFilter" type="checkbox"> Lower sodium · under 600mg</label>
+          </div>
+
+          <div class="collection-tabs" role="tablist" aria-label="Recipe collection">
+            <button class="collection-tab active" id="allTab" onclick="setCollection('all')">All recipes</button>
+            <button class="collection-tab" id="savedTab" onclick="setCollection('saved')">Saved recipes <span id="savedCount"></span></button>
+          </div>
+
+          <div class="recipe-grid" id="recipeGrid" aria-live="polite"></div>
+        </div>
+
+        <aside class="side-stack" id="planner">
+          <section class="panel">
+            <div class="panel-heading">
+              <h3>Your meal plan</h3>
+              <span class="badge" id="planCount">0 meals</span>
+            </div>
+            <p class="panel-note">Add recipes to plan your cooking session and see your combined prep time.</p>
+            <ul class="plan-items" id="planItems"></ul>
+            <div class="plan-total">
+              <span>Total prep time</span><strong id="planTime">0 min</strong>
+            </div>
+            <div class="panel-actions">
+              <button onclick="addPlanToGrocery()">Build grocery list</button>
+              <button onclick="clearPlan()">Clear plan</button>
+            </div>
+          </section>
+
+          <section class="panel" id="groceryPanel">
+            <div class="panel-heading">
+              <h3>Grocery list</h3>
+              <span class="badge" id="itemCount">0 items</span>
+            </div>
+            <p class="panel-note">Your list is saved on this device. Check items off as you shop.</p>
+            <ul class="grocery-items" id="groceryItems"></ul>
+            <div class="panel-actions">
+              <button onclick="shareList()">Share / copy</button>
+              <button onclick="window.print()">Print list</button>
+              <button onclick="exportList()">Export text</button>
+              <button onclick="clearPurchased()">Clear checked</button>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <section class="wrap campus-section" id="campus">
+      <div class="campus">
+        <div>
+          <div class="eyebrow">Your campus, your way</div>
+          <h2>See what’s on the menu.</h2>
+          <p>Connect to your university dining website, then come back to Lunch Box for a home-cooked alternative that fits your time and goals.</p>
+          <span class="campus-small">Dining menus are provided by your university; this prototype does not fetch or compare live menu data.</span>
+        </div>
+        <button id="diningButton" onclick="openDining()">Set university dining link ↗</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <span>Lunch Box · Good food. Less stress.</span>
+      <span>A student-friendly meal planning prototype</span>
+    </div>
+  </footer>
+
+  <script>
+    const recipes = [
+      {
+        id: 1, name: "Chickpea Power Bowl", emoji: "🥙", time: 15, cost: 3.25,
+        vegetarian: true, calories: 420, protein: 21, carbs: 54, fat: 13, sodium: 480,
+        description: "A colorful, filling bowl with creamy tahini dressing.",
+        ingredients: ["1 can chickpeas", "1 cup cooked rice", "1 cucumber", "2 tbsp tahini", "½ lemon"],
+        instructions: "Warm the chickpeas with a pinch of paprika. Add rice and chopped cucumber to a bowl. Mix tahini with lemon juice and a splash of water, then drizzle over everything."
+      },
+      {
+        id: 2, name: "Quick Egg Fried Rice", emoji: "🍳", time: 10, cost: 2.40,
+        vegetarian: true, calories: 390, protein: 19, carbs: 48, fat: 12, sodium: 530,
+        description: "A fast, satisfying way to use leftover rice and veggies.",
+        ingredients: ["1 cup cooked rice", "2 eggs", "½ cup frozen peas", "1 tbsp low-sodium soy sauce", "1 green onion"],
+        instructions: "Scramble the eggs in a hot pan and set aside. Stir-fry peas and rice for a few minutes. Add low-sodium soy sauce and eggs, mix well, and top with sliced green onion."
+      },
+      {
+        id: 3, name: "Peanut Noodle Jar", emoji: "🍜", time: 15, cost: 2.85,
+        vegetarian: true, calories: 455, protein: 14, carbs: 62, fat: 17, sodium: 590,
+        description: "Chewy noodles and crunchy vegetables with a peanut sauce.",
+        ingredients: ["2 oz noodles", "1 carrot", "½ bell pepper", "1 tbsp peanut butter", "1 tbsp low-sodium soy sauce"],
+        instructions: "Cook noodles according to the package and rinse with cool water. Stir peanut butter, soy sauce, and a little warm water into a smooth sauce. Toss with noodles and sliced vegetables."
+      },
+      {
+        id: 4, name: "Tuna White Bean Toast", emoji: "🥪", time: 10, cost: 3.80,
+        vegetarian: false, calories: 365, protein: 29, carbs: 39, fat: 10, sodium: 560,
+        description: "A protein-packed pantry lunch with lemon and herbs.",
+        ingredients: ["1 can low-sodium tuna", "½ can white beans", "2 slices whole-grain bread", "½ lemon", "1 tbsp plain yogurt"],
+        instructions: "Drain the tuna and beans. Mash together with yogurt, lemon juice, pepper, and herbs. Spoon over toasted bread."
+      },
+      {
+        id: 5, name: "Tomato Spinach Pasta", emoji: "🍝", time: 20, cost: 3.10,
+        vegetarian: true, calories: 440, protein: 16, carbs: 68, fat: 11, sodium: 510,
+        description: "A cozy pasta with tomatoes, spinach, and a little parmesan.",
+        ingredients: ["3 oz pasta", "1 cup canned tomatoes", "1 cup spinach", "1 garlic clove", "1 tbsp parmesan"],
+        instructions: "Cook pasta until just tender. Warm tomatoes with minced garlic. Stir in spinach until wilted, then add drained pasta and a splash of pasta water. Finish with parmesan."
+      },
+      {
+        id: 6, name: "Chicken & Corn Quesadilla", emoji: "🌮", time: 20, cost: 4.60,
+        vegetarian: false, calories: 510, protein: 34, carbs: 48, fat: 19, sodium: 580,
+        description: "Crispy, melty, and easy to customize with what you have.",
+        ingredients: ["1 tortilla", "3 oz cooked chicken", "¼ cup corn", "¼ cup shredded cheese", "2 tbsp salsa"],
+        instructions: "Add chicken, corn, and cheese to half of the tortilla. Fold it over and cook in a lightly oiled pan until golden on both sides and the cheese melts. Serve with salsa."
+      },
+      {
+        id: 7, name: "Turkey Quinoa Bowl", emoji: "🥣", time: 25, cost: 4.85,
+        vegetarian: false, calories: 490, protein: 36, carbs: 47, fat: 16, sodium: 570,
+        description: "A hearty, high-protein bowl with greens and a bright lemon dressing.",
+        ingredients: ["3 oz ground turkey", "½ cup cooked quinoa", "1 cup baby spinach", "½ lemon", "1 tsp olive oil"],
+        instructions: "Cook the turkey in a pan until fully cooked. Add the quinoa and spinach and stir until the spinach wilts. Dress with lemon juice, olive oil, and black pepper."
+      },
+      {
+        id: 8, name: "Lentil & Sweet Potato Bowl", emoji: "🍠", time: 30, cost: 3.70,
+        vegetarian: true, calories: 465, protein: 26, carbs: 72, fat: 9, sodium: 390,
+        description: "Comforting lentils, roasted sweet potato, and a cooling yogurt spoon.",
+        ingredients: ["½ cup cooked lentils", "1 small sweet potato", "½ cup plain yogurt", "1 tsp olive oil", "¼ tsp cumin"],
+        instructions: "Cube the sweet potato, toss with olive oil and cumin, and roast until tender. Serve with cooked lentils and a spoonful of plain yogurt."
+      }
+    ];
+
+    const grid = document.getElementById("recipeGrid");
+    let plan = readStorage("lunchbox-plan", []);
+    let grocery = readStorage("lunchbox-grocery", []);
+    let saved = readStorage("lunchbox-saved", []);
+    let collection = "all";
+
+    function readStorage(key, fallback) {
+      try {
+        const value = JSON.parse(localStorage.getItem(key));
+        return Array.isArray(value) ? value : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function store(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function renderRecipes() {
+      const term = document.getElementById("search").value.trim().toLowerCase();
+      const maxTime = document.getElementById("timeFilter").value;
+      const maxCost = document.getElementById("costFilter").value;
+      const vegetarian = document.getElementById("vegetarianFilter").checked;
+      const highProtein = document.getElementById("proteinFilter").checked;
+      const lowSodium = document.getElementById("sodiumFilter").checked;
+
+      const filtered = recipes.filter(recipe => {
+        const textMatch = !term || recipe.name.toLowerCase().includes(term) ||
+          recipe.description.toLowerCase().includes(term) ||
+          recipe.ingredients.some(item => item.toLowerCase().includes(term));
+        return textMatch &&
+          (collection !== "saved" || saved.includes(recipe.id)) &&
+          (maxTime === "all" || recipe.time <= Number(maxTime)) &&
+          (maxCost === "all" || recipe.cost <= Number(maxCost)) &&
+          (!vegetarian || recipe.vegetarian) &&
+          (!highProtein || recipe.protein >= 25) &&
+          (!lowSodium || recipe.sodium < 600);
+      });
+
+      if (!filtered.length) {
+        grid.innerHTML = `<div class="empty">${collection === "saved" && !saved.length
+          ? "No saved recipes yet. Tap the heart on a recipe to keep it here."
+          : "No recipes match those filters. Try changing your search or filters."}</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(recipe => {
+        const inPlan = plan.includes(recipe.id);
+        const isSaved = saved.includes(recipe.id);
+        return `
+          <article class="recipe-card">
+            <div class="recipe-image">
+              <span class="recipe-tag">${recipe.vegetarian ? "Vegetarian" : "Student favorite"}</span>
+              <button class="save-button ${isSaved ? "saved" : ""}" onclick="toggleSaved(${recipe.id})" aria-label="${isSaved ? "Remove from" : "Save to"} saved recipes">${isSaved ? "♥" : "♡"}</button>
+              <span aria-hidden="true">${recipe.emoji}</span>
+            </div>
+            <div class="recipe-body">
+              <div class="recipe-title-line">
+                <h3>${escapeHtml(recipe.name)}</h3>
+                <span class="price">$${recipe.cost.toFixed(2)}<small>per serving</small></span>
+              </div>
+              <p class="description">${escapeHtml(recipe.description)}</p>
+              <div class="meta">
+                <span>◷ ${recipe.time} min</span>
+                ${recipe.protein >= 25 ? "<span>High protein</span>" : ""}
+                ${recipe.sodium < 600 ? "<span>Lower sodium</span>" : ""}
+              </div>
+              <div class="nutrition" aria-label="Nutrition per serving">
+                <span><b>${recipe.calories}</b>Calories</span>
+                <span><b>${recipe.protein}g</b>Protein</span>
+                <span><b>${recipe.carbs}g</b>Carbs</span>
+                <span><b>${recipe.fat}g</b>Fat</span>
+                <span><b>${recipe.sodium}mg</b>Sodium</span>
+              </div>
+              <div class="card-actions">
+                <button class="plan-button ${inPlan ? "in-plan" : ""}" onclick="togglePlan(${recipe.id})">${inPlan ? "✓ In meal plan" : "+ Add to meal plan"}</button>
+                <button onclick="toggleInstructions(${recipe.id}, this)" aria-expanded="false">Details</button>
+              </div>
+              <div class="instructions" id="instructions-${recipe.id}">
+                <strong>Ingredients:</strong> ${recipe.ingredients.map(escapeHtml).join(", ")}<br><br>
+                <strong>Method:</strong> ${escapeHtml(recipe.instructions)}
+              </div>
+            </div>
+          </article>`;
+      }).join("");
+    }
+
+    function renderPlan() {
+      const selected = recipes.filter(recipe => plan.includes(recipe.id));
+      document.getElementById("planCount").textContent = `${selected.length} ${selected.length === 1 ? "meal" : "meals"}`;
+      document.getElementById("planTime").textContent = `${selected.reduce((sum, recipe) => sum + recipe.time, 0)} min`;
+      document.getElementById("planItems").innerHTML = selected.length
+        ? selected.map(recipe => `<li><span>${escapeHtml(recipe.name)}</span><span>${recipe.time}m</span><button class="small-remove" onclick="togglePlan(${recipe.id})" aria-label="Remove ${escapeHtml(recipe.name)} from plan">×</button></li>`).join("")
+        : '<li class="tiny-empty">Your plan is waiting for its first recipe.</li>';
+    }
+
+    function renderGrocery() {
+      const count = grocery.length;
+      document.getElementById("itemCount").textContent = `${count} ${count === 1 ? "item" : "items"}`;
+      if (!count) {
+        document.getElementById("groceryItems").innerHTML = '<li class="tiny-empty">Add ingredients from a recipe to get started.</li>';
+        return;
+      }
+
+      const groups = {};
+      grocery.forEach(item => {
+        const category = categorize(item.name);
+        (groups[category] ||= []).push(item);
+      });
+
+      document.getElementById("groceryItems").innerHTML = Object.entries(groups).map(([category, items]) =>
+        `<li class="category-label">${escapeHtml(category)}</li>` +
+        items.map(item => `<li class="${item.checked ? "checked" : ""}">
+          <input type="checkbox" ${item.checked ? "checked" : ""} onchange="toggleGrocery('${item.id}')" aria-label="Mark ${escapeHtml(item.name)} as purchased">
+          <span class="item-name">${escapeHtml(item.name)}</span>
+          <button class="small-remove" onclick="removeGrocery('${item.id}')" aria-label="Remove ${escapeHtml(item.name)}">×</button>
+        </li>`).join("")
+      ).join("");
+    }
+
+    function categorize(name) {
+      const value = name.toLowerCase();
+      if (/spinach|cucumber|carrot|pepper|onion|peas|tomato|garlic|sweet potato|corn|lemon/.test(value)) return "Produce";
+      if (/chicken|turkey|tuna|egg/.test(value)) return "Protein";
+      if (/yogurt|cheese|parmesan/.test(value)) return "Dairy & chilled";
+      if (/rice|quinoa|pasta|noodles|bread|tortilla|lentil|beans|chickpeas|peanut|tahini|soy sauce|olive oil|cumin|salsa|flour/.test(value)) return "Pantry";
+      return "Other";
+    }
+
+    function togglePlan(id) {
+      plan = plan.includes(id) ? plan.filter(item => item !== id) : [...plan, id];
+      store("lunchbox-plan", plan);
+      renderRecipes();
+      renderPlan();
+    }
+
+    function clearPlan() {
+      plan = [];
+      store("lunchbox-plan", plan);
+      renderRecipes();
+      renderPlan();
+    }
+
+    function addPlanToGrocery() {
+      const selected = recipes.filter(recipe => plan.includes(recipe.id));
+      selected.forEach(recipe => recipe.ingredients.forEach(name => {
+        if (!grocery.some(item => item.name.toLowerCase() === name.toLowerCase())) {
+          grocery.push({ id: makeId(), name, checked: false });
+        }
+      }));
+      store("lunchbox-grocery", grocery);
+      renderGrocery();
+      document.getElementById("groceryPanel").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function toggleSaved(id) {
+      saved = saved.includes(id) ? saved.filter(item => item !== id) : [...saved, id];
+      store("lunchbox-saved", saved);
+      updateTabs();
+      renderRecipes();
+    }
+
+    function setCollection(value) {
+      collection = value;
+      updateTabs();
+      renderRecipes();
+    }
+
+    function updateTabs() {
+      document.getElementById("allTab").classList.toggle("active", collection === "all");
+      document.getElementById("savedTab").classList.toggle("active", collection === "saved");
+      document.getElementById("savedCount").textContent = saved.length ? `(${saved.length})` : "";
+    }
+
+    function toggleInstructions(id, button) {
+      const panel = document.getElementById(`instructions-${id}`);
+      const open = panel.classList.toggle("open");
+      button.setAttribute("aria-expanded", String(open));
+      button.textContent = open ? "Hide details" : "Details";
+    }
+
+    function toggleGrocery(id) {
+      const item = grocery.find(entry => entry.id === id);
+      if (item) item.checked = !item.checked;
+      store("lunchbox-grocery", grocery);
+      renderGrocery();
+    }
+
+    function removeGrocery(id) {
+      grocery = grocery.filter(item => item.id !== id);
+      store("lunchbox-grocery", grocery);
+      renderGrocery();
+    }
+
+    function clearPurchased() {
+      grocery = grocery.filter(item => !item.checked);
+      store("lunchbox-grocery", grocery);
+      renderGrocery();
+    }
+
+    function groceryText() {
+      return ["Lunch Box grocery list", ...grocery.map(item => `${item.checked ? "[x]" : "[ ]"} ${item.name}`)].join("\n");
+    }
+
+    async function shareList() {
+      if (!grocery.length) return alert("Add a few ingredients to your grocery list first.");
+      const text = groceryText();
+      try {
+        if (navigator.share) await navigator.share({ title: "Lunch Box grocery list", text });
+        else {
+          await navigator.clipboard.writeText(text);
+          alert("Grocery list copied to clipboard.");
+        }
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          window.prompt("Copy your grocery list:", text);
+        }
+      }
+    }
+
+    function exportList() {
+      if (!grocery.length) return alert("Add a few ingredients to your grocery list first.");
+      const blob = new Blob([groceryText()], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "lunch-box-grocery-list.txt";
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    function openDining() {
+      let url = localStorage.getItem("lunchbox-dining-url");
+      if (!url) {
+        url = prompt("Paste your university dining website URL (include https://):");
+        if (!url) return;
+        try {
+          const parsed = new URL(url);
+          if (!["http:", "https:"].includes(parsed.protocol)) throw new Error();
+          url = parsed.href;
+          localStorage.setItem("lunchbox-dining-url", url);
+          document.getElementById("diningButton").textContent = "Visit dining website ↗";
+        } catch {
+          alert("Please enter a valid website address starting with https://");
+          return;
+        }
+      }
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    function makeId() {
+      return (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+      })[char]);
+    }
+
+    ["search", "timeFilter", "costFilter", "vegetarianFilter", "proteinFilter", "sodiumFilter"]
+      .forEach(id => document.getElementById(id).addEventListener(
+        id === "search" ? "input" : "change", renderRecipes
+      ));
+
+    if (localStorage.getItem("lunchbox-dining-url")) {
+      document.getElementById("diningButton").textContent = "Visit dining website ↗";
+    }
+
+    updateTabs();
+    renderRecipes();
+    renderPlan();
+    renderGrocery();
+  </script>
+</body>
+</html>
